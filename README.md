@@ -25,6 +25,15 @@ This allows one to build a container for a specific analysis without having to r
 
 ![Alt text](https://g.gravizo.com/source/custom_mark10?https%3A%2F%2Fraw.githubusercontent.com%2FLArbys%2Flarbys-containers%2Fmaster%2Fcontainer_graph.dot)
 
+| Container | Descripton |
+|:---------:|:-----------|
+| ubuntu    | official ubuntu containers on [dockerhub](https://hub.docker.com/_/ubuntu) |
+| ROOT      | build of CERN's [ROOT](https://github.com/root-project/root) data-analysis library |
+| OpenCV    | open source [library](https://github.com/opencv/opencv) of computer vision algorithms |
+| PyTorch   | deep learning [library](https://pytorch.org/) |
+| ubdllee   | current-gen analysis code for MicroBooNE DL low-energy excess analysis |
+| ubdl      | repository with next-gen LArbys tools for MicroBooNE DL-working group analysis |
+
 # Instructions
 
 We use two packages: [docker](https://www.docker.com/why-docker) and [singularity](https://www.sylabs.io/singularity/).
