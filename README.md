@@ -21,6 +21,10 @@ a container holding the common dependencies of our different software packages.
 
 This allows one to build a container for a specific analysis without having to repackage the whole stack of code again.
 
+## Are you going to make me build all of these myself?
+
+No! We keep copies of the containers on our [dockerhub](dockerhub) and [singularity](https://www.singularity-hub.org/collections/2494) hub pages.
+
 # Containers (and the heirarchy)
 
 ![Alt text](https://g.gravizo.com/source/custom_mark10?https%3A%2F%2Fraw.githubusercontent.com%2FLArbys%2Flarbys-containers%2Fmaster%2Fcontainer_graph.dot)
