@@ -31,7 +31,7 @@ This allows one to build a container for a specific analysis without having to r
 | ROOT      | build of CERN's [ROOT](https://github.com/root-project/root) data-analysis library |
 | OpenCV    | open source [library](https://github.com/opencv/opencv) of computer vision algorithms |
 | PyTorch   | deep learning [library](https://pytorch.org/) |
-| ubdllee   | current-gen analysis code for MicroBooNE DL low-energy excess analysis |
+| dllee_unified   | current-gen analysis code for MicroBooNE DL low-energy excess analysis |
 | ubdl      | repository with next-gen LArbys tools for MicroBooNE DL-working group analysis |
 
 # Instructions
