@@ -35,8 +35,18 @@ No! We keep copies of the containers on our [dockerhub](dockerhub) and [singular
 | ROOT      | build of CERN's [ROOT](https://github.com/root-project/root) data-analysis library |
 | OpenCV    | open source [library](https://github.com/opencv/opencv) of computer vision algorithms |
 | PyTorch   | deep learning [library](https://pytorch.org/) |
+| SubConvNet | includes submanifold convolution library for pytorch |
 | dllee_unified   | current-gen analysis code for MicroBooNE DL low-energy excess analysis |
 | ubdl      | repository with next-gen LArbys tools for MicroBooNE DL-working group analysis |
+
+## Specific Versions
+
+Here we list official stack versions to be used for production and analysis studies
+
+| Stack Name | ubuntu     | ROOT    | OpenCV | PyTorch   | SubConvNet | dllee_unified | ubdl  |
+|:----------:| -----------|---------|--------| --------- | ---------- | ------------- | ----- |
+|  mcc8jan19 |  16.04 LTS | 6.14/06 | 3.2    | 1.0.1post | tagXXXXXX  | tagXXXXXXXX   |  n/a  |
+|  mcc9jan19 |  18.04 LTS | 6.16/00 | 3.2    | 1.0.1post | tagXXXXXX  |    n/a        |  tagxxxx |
 
 # Instructions
 
