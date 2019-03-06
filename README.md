@@ -25,3 +25,20 @@ This allows one to build a container for a specific analysis without having to r
 
 ![Alt text](https://g.gravizo.com/source/custom_mark10?https%3A%2F%2Fraw.githubusercontent.com%2FLArbys%2Flarbys-containers%2Fmaster%2Fcontainer_graph.dot)
 
+# Instructions
+
+We use two packages: [docker](https://www.docker.com/why-docker) and [singularity](https://www.sylabs.io/singularity/).
+
+Typically, we will use `docker` to build the containers and then convert the docker image into a `singularity` container.
+
+In the end, it is not important what tool we use to build the containers (one could use just singularity), but ultimately we must end up with a singularity container to run on the Tufts cluster.  (The reason is that docker is not supported on the cluster due to security concerns with docker.)
+
+You can run both docker and singularity from your personal machine. You can also use lab machines at:
+
+* Tufts: meitner, rubin
+* MIT: nudot
+
+to build your containers.
+
+
+
