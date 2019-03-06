@@ -1,0 +1,34 @@
+FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+RUN apt-get update && apt-get install -y binutils \
+	    	      	cmake \
+			build-essential \
+			libfftw3-dev \
+			gcc \			
+			g++ \
+			gfortran \
+			git \
+			libgsl0-dev \
+			libjpeg-dev \
+			libpng-dev \
+			libx11-dev \
+			libxext-dev \
+			libxft-dev \
+			libxml2-dev \
+			libxpm-dev \
+			python \
+			python-dev \
+			openssl \
+			libxml2-dev \
+			tar \
+			wget && \
+    apt-get autoremove -y && apt-get clean -y
+    
+RUN mkdir -p /usr/local/root/build && \
+    cd /usr/local/root && \
+    wget https://root.cern.ch/download/root_v6.16.00.source.tar.gz && tar -zxvf root_v6.16.00.source.tar.gz && \
+    cd /usr/local/root/build && \
+    cmake -DGNUINSTALL=ON -DBUILTIN_XROOTD=ON /usr/local/root/root-6.16.00/ && \
+    cmake --build . -- -j 4
