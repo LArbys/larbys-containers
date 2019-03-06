@@ -23,26 +23,5 @@ This allows one to build a container for a specific analysis without having to r
 
 # Containers (and the heirarchy)
 
-![Alt text](https://g.gravizo.com/source/custom_mark10?https%3A%2F%2Fraw.githubusercontent.com%2FTLmaK0%2Fgravizo%2Fmaster%2FREADME.md)
-
-<details>
-<summary></summary>
-custom_mark10
-  digraph G {
-      size ="4,4";
-          UBUNTU (https://hub.docker.com/_/ubuntu) [shape=box];
-	      main -> parse [weight=8];
-	          parse -> execute;
-		      main -> init [style=dotted];
-		          main -> cleanup;
-			      execute -> { make_string; printf};
-			          init -> make_string;
-				      edge [color=red];
-				          main -> printf [style=bold,label="100 times"];
-					      make_string [label="make a string"];
-					          node [shape=box,style=filled,color=".7 .3 1.0"];
-						      execute -> compare;
-						        }
-							custom_mark10
-							</details>
+![Alt text](https://g.gravizo.com/source/custom_mark10?https%3A%2F%2Fraw.githubusercontent.com%2FLArbys%2Flarbys-containers%2Fmaster%2Fcontainer_graph.dot)
 
