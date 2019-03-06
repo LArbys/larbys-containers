@@ -30,7 +30,7 @@ This allows one to build a container for a specific analysis without having to r
 custom_mark10
   digraph G {
       size ="4,4";
-          main [shape=box];
+          UBUNTU (https://hub.docker.com/_/ubuntu) [shape=box];
 	      main -> parse [weight=8];
 	          parse -> execute;
 		      main -> init [style=dotted];
