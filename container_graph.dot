@@ -7,8 +7,9 @@ custom_mark10
     ubuntu -> ROOT [shape=box];
     ROOT -> OpenCV [shape=box];
     OpenCV -> PyTorch [shape=box];
-    PyTorch -> ubdl [shape=box];
-    PyTorch -> dllee_unified [shape=box];
+    PyTorch -> SparseConvNet [shape=box];
+    SparseConvNet -> ubdl [shape=box];
+    SparseConvNet -> dllee_unified [shape=box];
   }
 custom_mark10
 </details>

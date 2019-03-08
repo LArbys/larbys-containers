@@ -35,7 +35,7 @@ No! We keep copies of the containers on our [dockerhub](dockerhub) and [singular
 | ROOT      | build of CERN's [ROOT](https://github.com/root-project/root) data-analysis library |
 | OpenCV    | open source [library](https://github.com/opencv/opencv) of computer vision algorithms |
 | PyTorch   | deep learning [library](https://pytorch.org/) |
-| SubConvNet | includes submanifold convolution library for pytorch |
+| SparseConvNet | includes submanifold convolution library for pytorch |
 | dllee_unified   | current-gen analysis code for MicroBooNE DL low-energy excess analysis |
 | ubdl      | repository with next-gen LArbys tools for MicroBooNE DL-working group analysis |
 
@@ -46,7 +46,13 @@ Here we list official stack versions to be used for production and analysis stud
 | Stack Name | ubuntu     | ROOT    | OpenCV | PyTorch   | SubConvNet | dllee_unified | ubdl  |
 |:----------:| -----------|---------|--------| --------- | ---------- | ------------- | ----- |
 |  mcc8jan19 |  16.04 LTS+CUDA 9.0+cuDNN 7 | 6.14/06 | 3.2    | 1.0.1post | tagXXXXXX  | tagXXXXXXXX   |  n/a  |
-|  mcc9jan19 |  18.04 LTS+CUDA 10.0+cuDNN 7 | 6.16/00 | 3.2    | 1.0.1post | tagXXXXXX  |    n/a        |  tagxxxx |
+|  mcc9jan19 |  18.04 LTS+CUDA 10.0+cuDNN 7 | 6.16/00 | 3.4    | 1.0.1post | tagXXXXXX  |    n/a        |  tagxxxx |
+
+## Built containers on Tufts
+
+On the Tufts Cluster you can find the containers at:
+
+    /cluster/tufts/wongjiradlab/larbys/larbys-containers
 
 # Instructions
 
@@ -63,7 +69,10 @@ You can run both docker and singularity from your personal machine. You can also
 
 to build your containers.
 
+
 ## What do I need to build a container?
+
+(still under construction)
 
 In general, you just need to know the instructions you'd type to install the software in question. 
 You put those instructions into a recipe file and tell docker or singularity to build the container.
