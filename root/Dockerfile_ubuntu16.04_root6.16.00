@@ -1,0 +1,43 @@
+FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# DEPENDENCIES
+RUN apt-get update && apt-get install -y binutils \
+			build-essential \
+			libfftw3-dev \
+			gcc \			
+			g++ \
+			gfortran \
+			git \
+			libgsl0-dev \
+			libjpeg-dev \
+			libpng-dev \
+			libx11-dev \
+			libxext-dev \
+			libxft-dev \
+			libxml2-dev \
+			libxpm-dev \
+			python \
+			python-dev \
+			openssl \
+			libxml2-dev \
+			tar \
+			wget && \
+    apt-get autoremove -y && apt-get clean -y
+
+# CMAKE
+RUN cd /tmp && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.13.4/cmake-3.13.4-Linux-x86_64.sh && \
+    chmod +x cmake-3.13.4-Linux-x86_64.sh && \
+    yes | ./cmake-3.13.4-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir --skip-license && \
+    rm cmake-3.13.4-Linux-x86_64.sh
+
+# INSTALL ROOT
+RUN mkdir -p /usr/local/root/build && \
+    cd /usr/local/root && \
+    wget https://root.cern.ch/download/root_v6.16.00.source.tar.gz && tar -zxvf root_v6.16.00.source.tar.gz && \
+    cd /usr/local/root/build && \
+    cmake -DGNUINSTALL=ON -DBUILTIN_XROOTD=ON /usr/local/root/root-6.16.00/ && \
+    cmake --build . -- -j 4 && \
+    rm /usr/local/root/root_v6.16.00.source.tar.gz
