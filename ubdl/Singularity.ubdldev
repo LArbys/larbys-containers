@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: larbys/ubdl:dev
+From: larbys/ubdl:ubuntu16.04
 
 %post
 	apt update -y
