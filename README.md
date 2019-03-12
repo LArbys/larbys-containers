@@ -45,8 +45,8 @@ Here we list official stack versions to be used for production and analysis stud
 
 | Stack Name | ubuntu     | ROOT    | OpenCV | PyTorch   | SubConvNet | dllee_unified | ubdl  |
 |:----------:| -----------|---------|--------| --------- | ---------- | ------------- | ----- |
-|  mcc8jan19 |  16.04 LTS+CUDA 9.0+cuDNN 7 | 6.14/06 | 3.2    | 1.0.1post | tagXXXXXX  | tagXXXXXXXX   |  n/a  |
-|  mcc9jan19 |  18.04 LTS+CUDA 10.0+cuDNN 7 | 6.16/00 | 3.4    | 1.0.1post | tagXXXXXX  |    n/a        |  tagxxxx |
+|  dllee_unified |  16.04 LTS+CUDA 10.0+cuDNN 7 | 6.16/00 | 3.4    | 1.0.1post2 | tagXXXXXX  | tagXXXXXXXX   |  n/a  |
+|  ubdl |  16.04 LTS+CUDA 10.0+cuDNN 7 | 6.16/00 | 3.4    | 1.0.1post2 | tagXXXXXX  |    n/a        |  tagxxxx |
 
 ## Built containers on Tufts
 
@@ -70,28 +70,22 @@ You can run both docker and singularity from your personal machine. You can also
 to build your containers.
 
 
-## What do I need to build a container?
+## What do I need to do to build a container?
 
 (still under construction)
 
 In general, you just need to know the instructions you'd type to install the software in question. 
 You put those instructions into a recipe file and tell docker or singularity to build the container.
 
-As an example, we will use the anticipated most-likely case, which is to make a container with a new version of analysis code (`dllee_unified`).
+As an example, we will use the anticipated most-likely case, which is to make a container with a new version of analysis code (`ubdl`).
 
-In the `dllee_unified` folder, you'll see a file called `dllee_unifiee.singularity` which contains the instructions to run to build the dllee_unified repository. It'll look something that the following:
+In the `ubdl` folder, you'll see a file called `Singularity.ubdldev` which contains the instructions to run to build the `ubdl` repository. It'll look something that the following:
 
 ```
 bootstrap: docker
-From: larbys/pytorch:6.12.04_cuda8.0
+From: larbys/ubdl:ubuntu16.04
 
 %post
-  export USER=your-name-here
-  cp /tmp/$USER/krb5.conf /etc/
-  cp -r /tmp/$USER/grid-security /etc/$USER/
-  cp /tmp/$USER/vomses /etc/
-  apt-get update -y
-  apt-get install -y voms-clients krb5-user jacksum emacs vim  
   mkdir -p /cluster/home
   mkdir -p /cluster/kappa
   mkdir -p /cluster/shared
