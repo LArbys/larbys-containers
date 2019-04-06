@@ -31,7 +31,7 @@ No! We keep copies of the containers on our [dockerhub](dockerhub) and [singular
 
 | Container | Descripton |
 |:---------:|:-----------|
-| ubuntu    | [nvidia's containers](9.2-cudnn7-devel, 9.2-cudnn7-devel-ubuntu16.04) which include cuda and cuDNN libraries |
+| ubuntu    | [nvidia containers](https://hub.docker.com/r/nvidia/cuda/) which include cuda and cuDNN libraries |
 | ROOT      | build of CERN's [ROOT](https://github.com/root-project/root) data-analysis library |
 | OpenCV    | open source [library](https://github.com/opencv/opencv) of computer vision algorithms |
 | PyTorch   | deep learning [library](https://pytorch.org/) |
@@ -79,11 +79,52 @@ You put those instructions into a recipe file and tell docker or singularity to 
 
 As an example, we will use the anticipated most-likely case, which is to make a container with a new version of analysis code (`ubdl`).
 
-In the `ubdl` folder, you'll see a file called `Singularity.ubdldev` which contains the instructions to run to build the `ubdl` repository. It'll look something that the following:
+In the folder `ubdl`, there is the docker recipe file to build this container.
+It probably looks something like the following (assuming it hasn't changed too much since the time this README was written):
+
+```
+FROM larbys/sparseconvnet:ubuntu16.04_latest
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# UBDL
+RUN apt-get update -y && apt install -y rsync && apt-get autoremove -y && apt-get clean -y
+RUN pip install pyyaml typing figcan zmq
+RUN cd /usr/local && git clone --recursive https://github.com/larbys/ubdl && \
+     cd ubdl && chmod +x setenv.sh && chmod +x buildall.sh && chmod +x configure.sh
+RUN cd /usr/local/ubdl/larcv && cp misc/FindCUDA.cmake /usr/local/share/cmake-3.13/Modules/
+RUN cd /usr/local/ubdl && bash -c "source /usr/local/root/build/bin/thisroot.sh && source setenv.sh && source configure.sh && source  buildall.sh"
+```
+
+The first line tells docker to build off of an existing image.
+This happens to be the `larbys/sparseconvnet` image,
+which contains the software stack up to the Sparse Convolutional Network library.
+The SparseConvNet library is the last dependency for the `ubdl` code.
+So all that's left to finish the container is to build `ubdl` into the container.
+
+The docker file is just the list of instructions to install `ubdl`.
+
+To build it, run
+
+    docker build -t larbys/ubdl:dev . -f Dockerfile_ubuntu16.04
+
+The `-t` flag is to the set the "name" or "tag" of the image.
+`.` tells Docker where to find the docker recipe file.
+And '-f' is what recipe file to use (in '.').
+
+With the image with ubdl built, the next step if one wants to create a container to run
+at Tufts, is to create a singularity container.
+Like the docker build file above,
+we list the commands we would run to configure the computer for `ubdl`.
+
+As an example, in the `ubdl` folder,
+you'll see a file called `Singularity.ubdl`,
+which contains the instructions to build the `ubdl` repository.
+It'll look something that the following:
 
 ```
 bootstrap: docker
-From: larbys/ubdl:ubuntu16.04
+From: larbys/ubdl:latest
 
 %post
   mkdir -p /cluster/home
@@ -95,6 +136,17 @@ From: larbys/ubdl:ubuntu16.04
 
 ```
 
+## Alternative, build `ubdl` outside the container
 
+Here, we of course start with the container we built with docker above, `larbys/ubdl:latest`.
+You can see all we do is create four folders.
+These folders server to provide a mount point for our container to the network storage area.
+When making singularity containers for the Tufts cluster,
+please include these commands.
 
+Note that the instructinos here were about installing `ubdl` into the container.
+However, an alternative is to clone the `ubdl` code into some folder and then compile that source
+using the libraries found in the container.
 
+Instructions on how to do that can be found [here](https://github.com/LArbys/ubdl/wiki/Build-development-copy-of-UBDL-with-container)
+as part of the `ubdl` wiki.
