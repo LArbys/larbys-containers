@@ -9,3 +9,7 @@ RUN cd /usr/local && git clone --recursive https://github.com/larbys/ubdl && \
      cd ubdl && chmod +x setenv.sh && chmod +x buildall.sh && chmod +x configure.sh
 RUN cd /usr/local/ubdl/larcv && cp misc/FindCUDA.cmake /usr/local/share/cmake-3.13/Modules/
 RUN cd /usr/local/ubdl && bash -c "source /usr/local/root/build/bin/thisroot.sh && source setenv.sh && source configure.sh && source  buildall.sh"
+
+# ADD EIGEN
+RUN apt-get update -y && apt install -y libeigen3-dev && apt-get autoremove -y && apt-get clean -y
+RUN pip install tensorboard tensorboardX msgpack msgpack-numpy
