@@ -1,4 +1,4 @@
-FROM larbys/pytorch:1.0.1post2_ubuntu18.04
+FROM larbys/pytorch:1.0.1post2_ubuntu16.04_py3
 
 MAINTAINER taritree.wongjirad@tufts.edu
 
@@ -6,5 +6,5 @@ MAINTAINER taritree.wongjirad@tufts.edu
 RUN apt update -y && apt install -y libsparsehash-dev && \
     apt autoremove -y && \
     cd /tmp && git clone https://github.com/nutufts/SparseConvNet && \
-    cd SparseConvNet && chmod +x build.sh && \
-    PATH=/usr/local/cuda/bin:${PATH} ./build.sh
+    cd SparseConvNet && git checkout python3 && chmod +x build.sh && \
+    ./build.sh

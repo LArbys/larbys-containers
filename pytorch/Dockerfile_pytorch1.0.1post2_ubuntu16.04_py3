@@ -1,0 +1,8 @@
+FROM larbys/opencv:3.4_ubuntu16.04_py3
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# PyTorch
+RUN apt-get update -y && apt install -y python3-pip && \
+    pip3 install https://download.pytorch.org/whl/cu100/torch-1.0.1.post2-cp35-cp35m-linux_x86_64.whl && \
+    pip3 install torchvision
