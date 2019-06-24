@@ -4,12 +4,17 @@ MAINTAINER taritree.wongjirad@tufts.edu
 
 # UBDL
 RUN apt-get update -y && apt install -y rsync && apt-get autoremove -y && apt-get clean -y
-RUN pip install pyyaml typing figcan zmq
-RUN cd /usr/local && git clone --recursive https://github.com/larbys/ubdl && \
+RUN cd /usr/local && rm -rf /usr/local/ubdl && git clone --recursive https://github.com/larbys/ubdl && \
      cd ubdl && chmod +x setenv.sh && chmod +x buildall.sh && chmod +x configure.sh
 RUN cd /usr/local/ubdl/larcv && cp misc/FindCUDA.cmake /usr/local/share/cmake-3.13/Modules/
 RUN cd /usr/local/ubdl && bash -c "source /usr/local/root/build/bin/thisroot.sh && source setenv.sh && source configure.sh && source  buildall.sh"
+RUN cd /usr/local/ubdl && rm -rf larflow && git clone https://github.com/nutufts/larflow larflow
+RUN cd /usr/local/ubdl/larflow && git checkout ubdl_dev && git submodule init && git submodule update && \
+    bash -c "source /usr/local/root/build/bin/thisroot.sh && source /usr/local/ubdl/configure.sh && source configure.sh && mkdir build && cd build && cmake ../ && make install" && cd ../
+
+# ADD PIP MODULES
+RUN pip install pyyaml typing figcan zmq pexpect paramiko_tunnel selectors    
 
 # ADD EIGEN
 RUN apt-get update -y && apt install -y libeigen3-dev && apt-get autoremove -y && apt-get clean -y
-RUN pip install tensorboard tensorboardX msgpack msgpack-numpy
+RUN pip install tensorboard tensorboardX msgpack msgpack-numpy 
