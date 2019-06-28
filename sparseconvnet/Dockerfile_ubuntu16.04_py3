@@ -3,8 +3,9 @@ FROM larbys/pytorch:1.0.1post2_ubuntu16.04_py3
 MAINTAINER taritree.wongjirad@tufts.edu
 
 # PyTorch
-RUN apt update -y && apt install -y libsparsehash-dev && \
-    apt autoremove -y && \
-    cd /tmp && git clone https://github.com/nutufts/SparseConvNet && \
-    cd SparseConvNet && git checkout python3 && chmod +x build.sh && \
-    ./build.sh
+RUN apt update -y && apt install -y libsparsehash-dev libopenblas-dev libgomp1 libgomp1-dbg && apt autoremove -y && apt-get clean -y
+RUN pip3 install cython pyyaml typing figcan zmq 
+RUN cd /tmp && git clone https://github.com/nutufts/SparseConvNet && \
+    cd /tmp/SparseConvNet && git checkout python3 && chmod +x build.sh && \
+    CUDA_HOME=/usr/local/cuda-10.0;PATH=/usr/local/cuda-10.0/bin:${PATH} ./build.sh && \
+    cd /tmp && rm -r /tmp/SparseConvNet
