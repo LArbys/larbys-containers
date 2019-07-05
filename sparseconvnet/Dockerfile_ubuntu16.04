@@ -1,8 +1,8 @@
-FROM larbys/pytorch:1.0.1post2_ubuntu16.04
+FROM larbys/pytorch:pytorch1.0.1post2_ubuntu16.04_mkl
 
 MAINTAINER taritree.wongjirad@tufts.edu
 
-# PyTorch
+# SparseConvNet
 RUN apt update -y && apt install -y libsparsehash-dev && \
     apt autoremove -y && \
     cd /tmp && git clone https://github.com/nutufts/SparseConvNet && \
