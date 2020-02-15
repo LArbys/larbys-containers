@@ -1,11 +1,6 @@
-FROM larbys/opencv:3.4_ubuntu16.04
+FROM larbys/opencv:3.1_ubuntu16.04_py2
 
 MAINTAINER taritree.wongjirad@tufts.edu
-
-# PyTorch
-RUN apt-get update -y && apt install -y python-pip && \
-    pip install https://download.pytorch.org/whl/cu100/torch-1.0.1.post2-cp27-cp27mu-linux_x86_64.whl && \
-    pip install torchvision
 
 
 # MKL
@@ -14,3 +9,9 @@ RUN wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCT
 RUN wget https://apt.repos.intel.com/setup/intelproducts.list -O /etc/apt/sources.list.d/intelproducts.list && \
     apt-get update -y
 RUN apt-get install -y intel-mkl-2019.4-070 libomp-dev && apt-get autoremove -y && apt-get clean -y
+
+# PyTorch
+RUN apt-get update -y && apt install -y python-pip && \
+    pip install https://download.pytorch.org/whl/cu100/torch-1.0.1.post2-cp27-cp27mu-linux_x86_64.whl && \
+    pip install torchvision
+
