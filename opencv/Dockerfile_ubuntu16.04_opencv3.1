@@ -1,0 +1,33 @@
+FROM larbys/pytools:ubuntu16.04
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# OPENCV 3.1: DEPS
+RUN apt-get update -y && \
+    apt-get install -y build-essential \
+	    	    	cmake \
+			git \
+			libavcodec-dev \
+			libavformat-dev \
+			libdc1394-22-dev \
+			libgtk2.0-dev \
+			libjpeg-dev \
+			libpng-dev \
+			libswscale-dev \
+			libtiff-dev \
+			libtbb2 \
+			libtbb-dev \
+			libeigen3-dev \
+			pkg-config && \
+    apt-get autoremove -y && apt-get clean -y
+
+# OPENCV 3.1: BUILD
+RUN mkdir -p /tmp/build && cd /tmp/ && \
+    git clone https://github.com/opencv/opencv source && cd source && \
+    git checkout 3.1.0 && \
+    cd cmake && wget https://raw.githubusercontent.com/opencv/opencv/3.4/cmake/FindCUDA.cmake && \
+    wget https://raw.githubusercontent.com/opencv/opencv/3.4/cmake/OpenCVDetectCUDA.cmake && \
+    cd /tmp/build && \
+    cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local -DWITH_CUDA=OFF /tmp/source && \
+    make -j4 && make install -j4 && \
+    rm -r /tmp/build && rm -r /tmp/source

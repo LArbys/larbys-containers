@@ -1,0 +1,12 @@
+FROM larbys/root:6.16.00_ubuntu16.04_py2
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# PYTHON TOOLS
+RUN apt-get update && apt-get install -y python-dev python-pip && \
+    pip install --upgrade pip && \
+    apt-get autoremove -y && apt-get clean -y
+
+RUN pip install numpy && \		
+    pip install pandas && \
+    bash -c "source /usr/local/root/root-6.16.00/bin/thisroot.sh && pip install root_numpy"
