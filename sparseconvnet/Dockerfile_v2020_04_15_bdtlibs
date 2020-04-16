@@ -1,0 +1,13 @@
+FROM larbys/pytorch:1.3_py2
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# SparseConvNet
+RUN apt update -y && apt install -y libsparsehash-dev && \
+    apt autoremove -y && \
+    cd /tmp && git clone https://github.com/nutufts/SparseConvNet && \
+    cd SparseConvNet && git checkout -b v2020_04_15 v2020_04_15 \
+    chmod +x build.sh && \
+    CUDA_HOME=/usr/local/cuda-10.0;PATH=/usr/local/cuda-10.0/bin:${PATH} ./build.sh && \
+    cd / && rm -rf /tmp/SparseConvNet
+RUN pip install xgboost && pip install scikit-learn
