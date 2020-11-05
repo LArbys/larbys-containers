@@ -1,11 +1,11 @@
 Bootstrap: docker
-From: larbys/sparseconvnet:ubuntu16.04_mkl
+From: larbys/sparseconvnet:pytorch1.3_cpu
 
 %post
 	apt update -y
-	apt install -y libeigen3-dev emacs vim gdb
-	apt autoremove -y && apt clean -y
-        pip install pyyaml typing figcan zmq pexpect paramiko_tunnel selectors tensorboard tensorboardX msgpack msgpack-numpy
+	apt install -y libeigen3-dev libboost-all-dev emacs vim gdb
+	apt autoremove -y && apt clean -y		
+        /usr/local/bin/pip install pyyaml typing figcan zmq pexpect paramiko_tunnel selectors tensorboard tensorboardX msgpack msgpack-numpy
 	touch /usr/bin/nvidia-smi
 	touch /usr/bin/nvidia-debugdump
 	touch /usr/bin/nvidia-persistenced
