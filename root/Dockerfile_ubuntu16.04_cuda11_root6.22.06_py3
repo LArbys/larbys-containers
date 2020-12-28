@@ -1,0 +1,62 @@
+FROM nvidia/cuda:11.0-devel-ubuntu16.04
+
+MAINTAINER taritree.wongjirad@tufts.edu
+			
+# DEPENDENCIES
+RUN apt-get update && apt-get install -y binutils \
+			build-essential \
+			libfftw3-dev \
+			gcc \			
+			g++ \
+			gfortran \
+			git \
+			libgsl0-dev \
+			libjpeg-dev \
+			libpng-dev \
+			libx11-dev \
+			libxext-dev \
+			libxft-dev \
+			libxml2-dev \
+			libxpm-dev \
+			python3 \
+			python3-dev \
+			python3-pip \
+			openssl \
+			libxml2-dev \
+			tar \
+			wget && \
+    apt-get autoremove -y && apt-get clean -y
+
+# CMAKE
+RUN cd /tmp && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.13.4/cmake-3.13.4-Linux-x86_64.sh && \
+    chmod +x cmake-3.13.4-Linux-x86_64.sh && \
+    yes | ./cmake-3.13.4-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir --skip-license && \
+    rm cmake-3.13.4-Linux-x86_64.sh
+
+# INSTALL ROOT
+#RUN mkdir -p /usr/local/root/build && mkdir -p /usr/local/root/source && \
+#    cd /usr/local/root/source && \
+#    wget https://root.cern.ch/download/root_v6.16.00.source.tar.gz && tar -zxvf root_v6.16.00.source.tar.gz && \
+#    cd /usr/local/root/build && \
+#    cmake -DGNUINSTALL=ON -DBUILTIN_XROOTD=ON -DCMAKE_INSTALL_PREFIX=/usr/local/root/root-6.16.00 /usr/local/root/source/root-6.16.00/ && \
+#    make install -j4 && \
+#    rm /usr/local/root/source/root_v6.16.00.source.tar.gz && rm -rf /usr/local/root/source && rm -rf /usr/local/root/build
+#RUN apt-get install -y gfortran libpcre3-dev \
+#    xlibmesa-glu-dev libglew1.5-dev libftgl-dev \
+#    libmysqlclient-dev libfftw3-dev libcfitsio-dev \
+#    graphviz-dev libavahi-compat-libdnssd-dev \
+#    libldap2-dev python-dev libxml2-dev libkrb5-dev \
+#    libgsl0-dev qt5-default && apt-get autoremove -y && apt-get clean -y
+RUN cd /usr/local/ && wget https://root.cern/download/root_v6.22.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz \
+    && tar -xzvf root_v6.22.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz \
+    && rm root_v6.22.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz    
+
+# OPENCV 3.4: BUILD
+#RUN mkdir -p /tmp/build && cd /tmp/ && \
+#    git clone https://github.com/opencv/opencv source && cd source && \
+#    git checkout 3.4.13 && cd /tmp/build && \
+#    cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda/ /tmp/source && \
+#    make -j4 && make install -j4 && \
+#    rm -r /tmp/build && rm -r /tmp/source
+
