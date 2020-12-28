@@ -1,11 +1,10 @@
-FROM larbys/root:v6.22.06_u16.04_cu11
+FROM larbys/root:v6.22.06_u16.04_cu11_py3.6.11
 
 MAINTAINER taritree.wongjirad@tufts.edu
 
 # OPENCV 3.4: DEPS
 RUN apt-get update && \
     apt-get install -y build-essential \
-	    	    	cmake \
 			git \
 			libavcodec-dev \
 			libavformat-dev \
@@ -17,11 +16,9 @@ RUN apt-get update && \
 			libtiff-dev \
 			libtbb2 \
 			libtbb-dev \
-			pkg-config \
-			python3-dev \
-			python3-numpy \
-			python3-pip && \
-    apt-get autoremove -y && apt-get clean -y
+			pkg-config && \
+    apt-get autoremove -y && apt-get clean -y && \
+    pip3 install numpy
 
 # OPENCV 3.4: BUILD
 RUN mkdir -p /tmp/build && cd /tmp/ && \
