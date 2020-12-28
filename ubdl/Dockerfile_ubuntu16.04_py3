@@ -1,15 +1,16 @@
-FROM larbys/sparseconvnet:latest_ubuntu16.04_py3
+FROM larbys/pytorch:v1.7.1_cu11_u16.04_scn
 
 MAINTAINER taritree.wongjirad@tufts.edu
 
+# build boost
+RUN cd /tmp && wget https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.tar.gz && tar -zxvf boost_1_68_0.tar.gz && \
+    ln -s /usr/local/include/python3.6m /usr/local/include/python3.6 && \
+    cd boost_1_68_0 && \
+    ./bootstrap.sh --includedir=/usr/include/boost --libdir=/usr/lib/x86_64-linux-gnu --with-python=/usr/local/bin/python3.6 --with-python-version=3.6 --with-python-root=/usr/local/bin/python3.6\ :\ /usr/local/include/python3.6m\ :\ /usr/lib/x86_64-linux-gnu \
+    && ./b2 install -q && cd /tmp && rm boost_1_68_0.tar.gz && rm -r boost_1_68_0
+
 # UBDL
-RUN apt-get update -y && apt install -y rsync && apt-get autoremove -y && apt-get clean -y
-RUN pip3 install pyyaml typing figcan zmq
-RUN ln -s /usr/bin/python3 /usr/bin/python
-RUN cd /usr/local && git clone --recursive https://github.com/larbys/ubdl && \
-     cd ubdl && git checkout py3_container && git submodule update && chmod +x setenv.sh && chmod +x buildall_py3.sh && chmod +x configure.sh
-RUN cd /usr/local/ubdl/larcv && cp misc/FindCUDA.cmake /usr/local/share/cmake-3.13/Modules/
-RUN cd /usr/local/ubdl && bash -c "source /usr/local/root/build/bin/thisroot.sh && source setenv.sh && source configure.sh && source  buildall_py3.sh"
-RUN pip3 install --upgrade pip
-RUN pip3 install cython 
-RUN pip3 install packaging pycocotools opencv-python scipy matplotlib
+RUN apt-get update -y && apt install -y rsync libeigen3-dev emacs vim gdb libgoogle-glog-dev && apt-get autoremove -y && apt-get clean -y
+RUN pip3 install pyyaml typing figcan zmq pexpect paramiko_tunnel selectors tensorboard tensorboardX msgpack msgpack-numpy cython \
+    	 	 packaging pycocotools scipy matplotlib
+RUN rm /usr/bin/python && ln -s /usr/local/bin/python3.6 /usr/bin/python
