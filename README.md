@@ -10,8 +10,8 @@ Containers according to Amazon:
 >reliable, and consistent deployments, regardless of environment.
 
 As far as our group is concerned, we use containers to be able to run the same piece of code on
-the various compute platforms we ~can get our hands on~ have access to. This is primary the Tufts cluster, which requires
-us to put our code into `Singularity` containers.
+the various compute platforms we have access to.
+This is primary the Tufts cluster, which requires us to put our code into `Singularity` containers.
 
 ## What's the repo for?
 
@@ -43,10 +43,14 @@ No! We keep copies of the containers on our [dockerhub](dockerhub) and [singular
 
 Here we list official stack versions to be used for production and analysis studies
 
-| Stack Name | ubuntu     | ROOT    | OpenCV | PyTorch   | SubConvNet | dllee_unified | ubdl  |
-|:----------:| -----------|---------|--------| --------- | ---------- | ------------- | ----- |
-|  dllee_unified |  16.04 LTS+CUDA 10.0+cuDNN 7 | 6.16/00 | 3.4    | 1.0.1post2 | tagXXXXXX  | tagXXXXXXXX   |  n/a  |
-|  ubdl |  16.04 LTS+CUDA 10.0+cuDNN 7 | 6.16/00 | 3.4    | 1.0.1post2 | tagXXXXXX  |    n/a        |  tagxxxx |
+| Stack Name | ubuntu     | python |  ROOT    | OpenCV | PyTorch   | SubConvNet (nutufts-fork) | dllee_unified | ubdl  |
+|:----------:| ---------- | ------ | -------- | ------ | --------- | ------------------------- | ------------- | ----- |
+|  dllee_unified |  16.04 LTS+CUDA 10.0+cuDNN 7 | 2.7 | 6.16/00 | 3.4    | 1.0.1post2 | tagXXXXXX  | tagXXXXXXXX   |  n/a  |
+|  ubdl |  16.04 LTS+CUDA 10.0+cuDNN 7 | 2.7 | 6.16/00 | 3.4    | 1.0.1post2 | tagXXXXXX  |    n/a        |  tagxxxx |
+|  ubdl dependences |  16.04 LTS+CUDA 11.0+cuDNN 8 | 3.6.11 | 6.22/06 | 3.4.11   | 1.7.1 | 7dfbd0f |    n/a        |  n/a |
+
+The `ubdl dependencies` container is used to build the `ubdl` repository on Tufts.
+This provides a development environment.
 
 ## Built containers on Tufts
 
@@ -65,7 +69,7 @@ In the end, it is not important what tool we use to build the containers (one co
 You can run both docker and singularity from your personal machine. You can also use lab machines at:
 
 * Tufts: meitner, rubin
-* MIT: nudot
+* MIT: nudot, trex
 
 to build your containers.
 
@@ -147,6 +151,7 @@ please include these commands.
 Note that the instructinos here were about installing `ubdl` into the container.
 However, an alternative is to clone the `ubdl` code into some folder and then compile that source
 using the libraries found in the container.
+We provide the `ubdl-dependencies` container for this.
 
 Instructions on how to do that can be found [here](https://github.com/LArbys/ubdl/wiki/Build-development-copy-of-UBDL-with-container)
 as part of the `ubdl` wiki.

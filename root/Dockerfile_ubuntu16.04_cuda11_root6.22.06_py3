@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.0-devel-ubuntu16.04
+FROM nvidia/cuda:11.0-cudnn8-devel-ubuntu16.04
 
 MAINTAINER taritree.wongjirad@tufts.edu
 
@@ -47,22 +47,3 @@ RUN mkdir -p /usr/local/root/build && mkdir -p /usr/local/root/source && \
     cmake -DGNUINSTALL=ON -DCMAKE_INSTALL_PREFIX=/usr/local/root/root-6.22.06 /usr/local/root/source/root-6.22.06/ && \
     make install -j4 && \
     rm -rf /usr/local/root/source && rm -rf /usr/local/root/build
-
-#RUN apt-get install -y gfortran libpcre3-dev \
-#    xlibmesa-glu-dev libglew1.5-dev libftgl-dev \
-#    libmysqlclient-dev libfftw3-dev libcfitsio-dev \
-#    graphviz-dev libavahi-compat-libdnssd-dev \
-#    libldap2-dev libxml2-dev libkrb5-dev \
-#    libgsl0-dev && apt-get autoremove -y && apt-get clean -y
-#RUN cd /usr/local/ && wget https://root.cern/download/root_v6.22.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz \
-#     && tar -xzvf root_v6.22.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz \
-#     && rm root_v6.22.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz    
-
-# # OPENCV 3.4: BUILD
-# #RUN mkdir -p /tmp/build && cd /tmp/ && \
-# #    git clone https://github.com/opencv/opencv source && cd source && \
-# #    git checkout 3.4.13 && cd /tmp/build && \
-# #    cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda/ /tmp/source && \
-# #    make -j4 && make install -j4 && \
-# #    rm -r /tmp/build && rm -r /tmp/source
-
