@@ -1,0 +1,10 @@
+FROM larbys/opencv:3.1_ubuntu16.04_py2
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# PyTorch
+RUN apt-get update -y && apt install -y python-pip && \
+    pip install https://download.pytorch.org/whl/cpu/torch-1.3.0%2Bcpu-cp27-cp27mu-linux_x86_64.whl && \
+    pip install https://download.pytorch.org/whl/cpu/torchvision-0.4.1%2Bcpu-cp27-cp27mu-linux_x86_64.whl
+
+

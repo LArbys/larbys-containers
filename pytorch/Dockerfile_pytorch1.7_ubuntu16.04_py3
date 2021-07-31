@@ -1,0 +1,12 @@
+FROM larbys/opencv:v3.4.13_py3.6.11_u16.04_cu11
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# PyTorch
+RUN pip3 install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio===0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+
+# SparseConvNet
+RUN apt-get update -y && apt install -y git && \
+    cd /tmp/ && git clone https://github.com/NuTufts/SparseConvNet.git && cd SparseConvNet \
+    && chmod +x build_container.sh && ./build_container.sh && cd /tmp && rm -r SparseConvNet \
+    && apt-get clean -y

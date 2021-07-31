@@ -1,0 +1,49 @@
+FROM nvidia/cuda:11.0-cudnn8-devel-ubuntu16.04
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# DEPENDENCIES
+RUN apt-get update && apt-get install -y binutils \
+			build-essential gcc g++ gfortran git tar wget \
+			libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev && \
+    apt-get autoremove -y && apt-get clean -y
+
+# PYTHON
+RUN cd /tmp && wget https://www.python.org/ftp/python/3.6.11/Python-3.6.11.tgz \
+    && tar -zxvf Python-3.6.11.tgz \
+    && cd Python-3.6.11 \
+    && ./configure --enable-shared \
+    && make && make install \
+    && cd /tmp && rm -r Python-3.6.11 && rm Python-3.6.11.tgz
+
+# CMAKE
+RUN cd /tmp && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.13.4/cmake-3.13.4-Linux-x86_64.sh && \
+    chmod +x cmake-3.13.4-Linux-x86_64.sh && \
+    yes | ./cmake-3.13.4-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir --skip-license && \
+    rm cmake-3.13.4-Linux-x86_64.sh
+
+# DEPENDENCIES
+RUN apt-get update && apt-get install -y \
+    libfftw3-dev \
+    libgsl0-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libx11-dev \
+    libxext-dev \
+    libxft-dev \
+    libxml2-dev \
+    libxpm-dev \
+    openssl \
+    libxml2-dev && \
+    apt-get autoremove -y && apt-get clean -y
+
+
+# INSTALL ROOT
+RUN mkdir -p /usr/local/root/build && mkdir -p /usr/local/root/source && \
+    cd /usr/local/root/source && \
+    wget https://root.cern/download/root_v6.22.06.source.tar.gz && tar -zxvf root_v6.22.06.source.tar.gz && \
+    cd /usr/local/root/build && \
+    cmake -DGNUINSTALL=ON -DCMAKE_INSTALL_PREFIX=/usr/local/root/root-6.22.06 /usr/local/root/source/root-6.22.06/ && \
+    make install -j4 && \
+    rm -rf /usr/local/root/source && rm -rf /usr/local/root/build
