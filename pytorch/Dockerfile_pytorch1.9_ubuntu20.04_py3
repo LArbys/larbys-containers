@@ -1,0 +1,14 @@
+FROM nvidia/cuda:11.1-devel-ubuntu20.04
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# PyTorch
+RUN apt-get update -y && apt install -y python3-pip && \
+    pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html \
+    && apt-get clean -y
+
+# SparseConvNet
+RUN apt-get update -y && apt install -y git && \
+    cd /tmp/ && git clone https://github.com/NuTufts/SparseConvNet.git && cd SparseConvNet \
+    && chmod +x build_container.sh && ./build_container.sh && cd /tmp && rm -r SparseConvNet \
+    && apt-get clean -y
