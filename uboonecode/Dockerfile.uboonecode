@@ -1,0 +1,12 @@
+FROM sl:7
+
+MAINTAINER tmw@fnal.gov
+
+RUN yum install -y curl wget perl freetype libGLEW \
+    libSM.x86_64 libXmu.x86_64 libXpm.x86_64 openssl krb5-libs krb5-server krb5-workstation \
+    && yum clean all
+RUN cd /etc/ && wget https://authentication.fnal.gov/krb5conf/SL7/krb5.conf
+RUN mkdir /tmp/scisoft && mkdir -p /scisoft/products
+RUN cd /tmp/scisoft && wget http://scisoft.fnal.gov/scisoft/bundles/tools/pullProducts && \
+    chmod +x pullProducts
+RUN cd /tmp/scisoft && ./pullProducts /scisoft/products slf7 uboone-08.00.00.40 s78-e17 prof
