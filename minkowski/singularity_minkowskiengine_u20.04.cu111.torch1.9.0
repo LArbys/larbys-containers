@@ -1,0 +1,7 @@
+Bootstrap: docker
+From: localhost:5000/larbys/ubdl:u20.04_cu11.1_torch1.9_root6.24.02_minkowskix
+
+%post
+	apt update -y && apt install -y openjdk-8-jdk && apt clean -y
+	pip3 install pyarrow pyspark tensorboard
+	mkdir -p /cluster/home    

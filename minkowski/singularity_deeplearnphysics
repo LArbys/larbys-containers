@@ -1,0 +1,7 @@
+Bootstrap: docker
+From: deeplearnphysics/larcv2:ub20.04-cuda11.3-cudnn8-pytorch1.10.0-extra
+
+%post
+	apt update -y && apt install -y openjdk-8-jdk && apt clean -y
+	pip3 install pyarrow pyspark tensorboard
+	mkdir -p /cluster/home    
