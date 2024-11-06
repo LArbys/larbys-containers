@@ -1,0 +1,5 @@
+Bootstrap: docker
+From: localhost:5000/larbys/ubdl:dlgen2_cu11.1_torch1.9_minkowski
+
+%post
+	mkdir -p /cluster/home    

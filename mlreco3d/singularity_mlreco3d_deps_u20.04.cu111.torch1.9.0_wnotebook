@@ -4,5 +4,6 @@ From: larbys/ubdl:u20.04_cu11.1_torch1.9_root6.24.02_minkowskix
 %post
 	apt update -y && apt install -y openjdk-8-jdk && apt clean -y
 	pip3 install pyarrow pyspark tensorboard
+	pip3 install torch_geometric==2.2.0 torch_sparse==0.6.12 torch_scatter==2.1.0 numba==0.56.4 networkx==3.0 torch_cluster==1.6.0
 	pip3 install notebook
 	mkdir -p /cluster/home    

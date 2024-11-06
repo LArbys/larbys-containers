@@ -1,0 +1,15 @@
+FROM localhost:5000/larbys/ubdl:u20.04_cu11.1_torch1.9_root6.24.02_minkowskix
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# DEPENDENCIES
+RUN apt update -y && apt install -y openjdk-8-jdk rsync libeigen3-dev emacs vim gdb libgoogle-glog-dev && apt-get autoremove -y && apt-get clean -y
+RUN pip3 install pyarrow pyspark pyyaml typing figcan zmq pexpect paramiko_tunnel selectors tensorboard tensorboardX msgpack msgpack-numpy cython \
+    	 	 packaging pycocotools scipy matplotlib
+RUN rm /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
+RUN apt update -y && apt install -y g++-10 && apt-get autoremove -y && apt-get clean -y
+
+# UBDL
+RUN cd /usr/local/ && git clone https://github.com/larbys/ubdl && cd /usr/local/ubdl \
+    && git checkout gen2 && git submodule init && git submodule update \
+    && bash -c "source setenv_py3.sh && which root && source configure.sh && CC=/usr/bin/gcc-10 CXX=/usr/bin/g++-10 source buildall_py3.sh"

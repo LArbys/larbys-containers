@@ -1,0 +1,7 @@
+Bootstrap: docker
+From: localhost:5000/larbys/dlp:wopencv3.4
+
+%post
+	apt update -y && apt install -y openjdk-8-jdk libeigen3-dev && apt clean -y
+	pip3 install pyarrow pyspark tensorboard
+	mkdir -p /cluster/home    

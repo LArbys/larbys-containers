@@ -39,6 +39,11 @@ No! We keep copies of the containers on our [dockerhub](dockerhub) and [singular
 | dllee_unified   | current-gen analysis code for MicroBooNE DL low-energy excess analysis |
 | ubdl      | repository with next-gen LArbys tools for MicroBooNE DL-working group analysis |
 
+To build the full stack, proceed to go to each folder in order
+* root
+* opencv
+* pytorch
+
 ## Specific Versions
 
 Here we list official stack versions to be used for production and analysis studies

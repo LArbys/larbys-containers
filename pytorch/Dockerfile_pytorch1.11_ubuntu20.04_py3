@@ -1,10 +1,12 @@
-FROM nvidia/cuda:11.1-devel-ubuntu20.04
+FROM nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
 
 MAINTAINER taritree.wongjirad@tufts.edu
 
+RUN apt-get update -y && apt install -y gcc-10 && apt-get clean -y
+
 # PyTorch
 RUN apt-get update -y && apt install -y python3-pip && \
-    pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html \
+    pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113 \
     && apt-get clean -y
 
 # SparseConvNet

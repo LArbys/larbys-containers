@@ -1,0 +1,7 @@
+Bootstrap: docker
+Registry: http://localhost:5000
+From: localhost:5000/larbys/root:v6.28.12_cxx14_u22.04_torch2.4.0_me_xgboost
+
+%post
+	mkdir -p /cluster/tufts/wongjiradlab
+	mkdir -p /cluster/tufts/wongjiradlabnu
