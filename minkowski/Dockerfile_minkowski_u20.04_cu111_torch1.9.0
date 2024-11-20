@@ -2,13 +2,33 @@ FROM larbys/ubdl:depsonly_py3_u20.04_cu11.1_pytorch1.9_root6.24.02
 
 MAINTAINER taritree.wongjirad@tufts.edu
 
-# UBDL
+# UBDL DEPENDENCEIS
 RUN apt-get update -y \
     && apt install -y rsync libeigen3-dev libboost-all-dev emacs vim gdb \
     && apt-get autoremove -y && apt-get clean -y
 
 # ADD PIP MODULES
 RUN pip3 install pyyaml typing figcan zmq pexpect paramiko_tunnel selectors tensorboard tensorboardX msgpack msgpack-numpy
+
+# XGBOOST 1.4.2
+RUN cd /tmp && git clone --recursive https://github.com/dmlc/xgboost.git xgboost_v1.4.2 && cd xgboost_v1.4.2 && git checkout -b v1.4.2 v1.4.2 \
+    && git submodule init && git submodule update \
+    && mkdir -p /tmp/xgboost_build \
+    && cd /tmp/xgboost_build && cmake ../xgboost_v1.4.2 && make install && cd /tmp && rm -rf /tmp/xgboost_build \
+    && rm -rf /tmp/xgboost_v1.4.2
+
+# clean up nvidia lists
+RUN  rm -rf /var/lib/apt/lists/* \
+         /etc/apt/sources.list.d/cuda.list \
+          /etc/apt/sources.list.d/nvidia-ml.list 
+RUN apt-get update 
+
+#ADD "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin" "/tmp/cuda-ubuntu2004.pin"
+#ADD "https://developer.download.nvidia.com/compute/cuda/11.3.1/local_installers/cuda-repo-ubuntu2004-11-3-local_11.3.1-465.19.01-1_amd64.deb" "/tmp/cuda-repo-ubuntu2004-11-3-local_11.3.1-465.19.01-1_amd64.deb"
+#ADD "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub" "/etc/apt/7fa2af80.pub"
+#RUN cat /etc/apt/7fa2af80.pub | apt-key add - && \
+#    dpkg -i /tmp/cuda-repo-ubuntu2004-11-3-local_11.3.1-465.19.01-1_amd64.deb && \
+#    apt update
 
 # ADD Minkowski engine
 
@@ -20,12 +40,9 @@ ENV TORCH_CUDA_ARCH_LIST="6.0 6.1 7.0 8.0+PTX"
 ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
 
 # Install dependencies
-RUN apt-get update
 RUN apt-get install -y git ninja-build cmake build-essential libopenblas-dev \
-    xterm xauth openssh-server tmux wget mate-desktop-environment-core
+    xterm xauth openssh-server tmux wget mate-desktop-environment-core && apt clean -y
 
-RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/*
 
 # For faster build, use more jobs.
 ENV MAX_JOBS=4
