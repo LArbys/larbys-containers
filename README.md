@@ -23,39 +23,23 @@ This allows one to build a container for a specific analysis without having to r
 
 ## Are you going to make me build all of these myself?
 
-No! We keep copies of the containers on our [dockerhub](dockerhub) and [singularity](https://www.singularity-hub.org/collections/2494) hub pages.
+No! We keep copies of the containers on dockerhub and singularity hub:
+
+* Dockerhub [ubdl/larbys](https://hub.docker.com/r/larbys/ubdl)
+* [Singularity](https://www.singularity-hub.org/collections/2494)
 
 # Containers (and the heirarchy)
 
-![Alt text](https://g.gravizo.com/source/custom_mark10?https%3A%2F%2Fraw.githubusercontent.com%2FLArbys%2Flarbys-containers%2Fmaster%2Fcontainer_graph.dot)
+Current building chain as of 2024/11/20.
 
-| Container | Descripton |
-|:---------:|:-----------|
-| ubuntu    | [nvidia containers](https://hub.docker.com/r/nvidia/cuda/) which include cuda and cuDNN libraries |
-| ROOT      | build of CERN's [ROOT](https://github.com/root-project/root) data-analysis library |
-| OpenCV    | open source [library](https://github.com/opencv/opencv) of computer vision algorithms |
-| PyTorch   | deep learning [library](https://pytorch.org/) |
-| SparseConvNet | includes submanifold convolution library for pytorch |
-| dllee_unified   | current-gen analysis code for MicroBooNE DL low-energy excess analysis |
-| ubdl      | repository with next-gen LArbys tools for MicroBooNE DL-working group analysis |
+In reverse order:
 
-To build the full stack, proceed to go to each folder in order
-* root
-* opencv
-* pytorch
+  * `minkowski/singularity_minkowskiengine_u20.04.cu111.torch1.9.0`
+  * `minkowski/Dockerfile_minkowski_u20.04_cu111_torch1.9.0`: [larbys/ubdl:u20.04_cu11.1_torch1.9_root6.24.02_minkowski_xgboost](https://hub.docker.com/layers/larbys/ubdl/u20.04_cu11.1_torch1.9_root6.24.02_minkowski_xgboost/images/sha256-5d55750df04b558e04c73301a4c25d8044f50fcc9a7dc290b84b42c96b3f2f8b?context=repo)
+  * `root/Dockerfile_ubuntu20.04_root6.24.02_py3_fromscn`: [larbys/ubdl:depsonly_py3_u20.04_cu11.1_pytorch1.9_root6.24.02](https://hub.docker.com/layers/larbys/ubdl/depsonly_py3_u20.04_cu11.1_pytorch1.9_root6.24.02/images/sha256-470b0eb0c9a7fc73c878afced9680ee5eb7fb82bda66ea05474b2acb39a19107?context=repo)
+  * `pytorch/Dockerfile_pytorch1.9_ubuntu20.04_py3`: [larbys/pytorch:v1.9_cu11.1_u20.04](https://hub.docker.com/layers/larbys/pytorch/v1.9_cu11.1_u20.04/images/sha256-f50c17ae703222365513391717881f617b28752e3cec571fca860b9e76734376?context=repo)
+  * Base container: [nvidia/cuda:11.1.1-devel-ubuntu20.04](https://hub.docker.com/layers/nvidia/cuda/11.1.1-devel-ubuntu20.04/images/sha256-299cd42d4c364516bd120fa8097b0397cac6c962e3761ef822656e5c5a25ea40?context=explore)
 
-## Specific Versions
-
-Here we list official stack versions to be used for production and analysis studies
-
-| Stack Name | ubuntu     | python |  ROOT    | OpenCV | PyTorch   | SubConvNet (nutufts-fork) | dllee_unified | ubdl  |
-|:----------:| ---------- | ------ | -------- | ------ | --------- | ------------------------- | ------------- | ----- |
-|  dllee_unified |  16.04 LTS+CUDA 10.0+cuDNN 7 | 2.7 | 6.16/00 | 3.4    | 1.0.1post2 | tagXXXXXX  | tagXXXXXXXX   |  n/a  |
-|  ubdl |  16.04 LTS+CUDA 10.0+cuDNN 7 | 2.7 | 6.16/00 | 3.4    | 1.0.1post2 | tagXXXXXX  |    n/a        |  tagxxxx |
-|  ubdl dependences |  16.04 LTS+CUDA 11.0+cuDNN 8 | 3.6.11 | 6.22/06 | 3.4.11   | 1.7.1 | 7dfbd0f |    n/a        |  n/a |
-
-The `ubdl dependencies` container is used to build the `ubdl` repository on Tufts.
-This provides a development environment.
 
 ## Built containers on Tufts
 
