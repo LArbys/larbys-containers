@@ -1,0 +1,161 @@
+FROM ubuntu:20.04
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+## preseed tzdata, update package index, upgrade packages and install needed software
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN=true
+
+RUN truncate -s0 /tmp/preseed.cfg; \
+    echo "tzdata tzdata/Areas select US" >> /tmp/preseed.cfg; \
+    echo "tzdata tzdata/Zones/US select New York" >> /tmp/preseed.cfg; \
+    debconf-set-selections /tmp/preseed.cfg && \
+    rm -f /etc/timezone /etc/localtime && \
+    apt-get update && \
+    apt-get install -y tzdata && \
+    apt-get autoremove -y && apt-get clean -y
+
+# clean up nvidia lists
+RUN  rm -rf /var/lib/apt/lists/* \
+         /etc/apt/sources.list.d/cuda.list \
+          /etc/apt/sources.list.d/nvidia-ml.list && apt-get update -y && apt-get clean -y
+
+# DEPENDENCIES
+RUN apt-get update && apt-get install -y binutils \
+			build-essential \
+			libfftw3-dev \
+			gcc \			
+			g++ \
+			gfortran \
+			git \
+			libgsl0-dev \
+			libjpeg-dev \
+			libpng-dev \
+			libx11-dev \
+			libxext-dev \
+			libxft-dev \
+			libxml2-dev \
+			libxpm-dev \
+			python3 \
+			python3-dev \
+			openssl \
+			libxml2-dev \
+			tar \
+			libeigen3-dev \
+			emacs \
+			wget && \
+    apt-get autoremove -y && apt-get clean -y
+
+# CMAKE
+RUN cd /tmp && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.13.4/cmake-3.13.4-Linux-x86_64.sh && \
+    chmod +x cmake-3.13.4-Linux-x86_64.sh && \
+    yes | ./cmake-3.13.4-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir --skip-license && \
+    rm -r cmake*
+
+
+# PyTorch 1.9.0 CPU
+RUN apt-get update -y && apt install -y python3-pip && \
+    pip install torch==1.9.1+cpu torchvision==0.10.1+cpu torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html \
+    pip install torch==1.11.0+cpu torchvision==0.12.0+cpu torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cpu \
+    && rm -rf ~/.cache/pip /root/.cache/pip \
+    && apt-get clean -y
+
+# Install Minkowski Engine dependencies
+RUN apt-get update -y && apt install -y build-essential python3-dev libopenblas-dev git && apt-get clean -y
+#RUN apt-get install -y git ninja-build cmake build-essential libopenblas-dev \
+#    xterm xauth openssh-server tmux wget mate-desktop-environment-core && apt clean -y
+
+
+# For faster build, use more jobs.
+RUN pip3 install -U git+https://github.com/NVIDIA/MinkowskiEngine -v --no-deps \
+                           --install-option="--cpu_only" \
+                           --install-option="--blas=openblas"
+
+# ROOT DEPENDENCIES
+RUN apt update -y && \
+    apt install -y binutils cmake dpkg-dev g++ gcc libssl-dev git libx11-dev \
+    libxext-dev libxft-dev libxpm-dev python3 libtbb-dev libgif-dev wget && \
+    apt-get autoremove -y && apt-get clean -y
+
+# INSTALL ROOT PRE-COMPILED BINARIES
+RUN cd /usr/local/ && wget https://root.cern/download/root_v6.34.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
+    && tar -xzvf root_v6.34.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
+    && rm root_v6.34.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz
+
+# OPENCV DEPENDENCEIS
+RUN apt-get update -y && \
+    apt install -y libavcodec-dev \
+		libavformat-dev \
+		libgtk2.0-dev \
+		libdc1394-dev \
+		libjpeg-dev \
+		libpng-dev \
+		libswscale-dev \
+		libtiff-dev \
+		libtbb2 \
+		libtbb-dev \
+		pkg-config && \
+    apt-get autoremove -y && apt-get clean -y
+#		libdc1394-22-dev \    
+
+# OPENCV 3.4: BUILD
+RUN mkdir -p /tmp/build && cd /tmp/ && \
+    git clone https://github.com/opencv/opencv source && cd source && \
+    git checkout 3.4.13 && cd /tmp/build && \
+    cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda/ /tmp/source && \
+    make -j4 && make install -j4 && \
+    rm -r /tmp/build && rm -r /tmp/source
+
+# UBDL DEPS
+RUN pip install pyyaml scipy \
+    && rm -rf ~/.cache/pip /root/.cache/pip
+
+# UBDL
+RUN mkdir -p /cluster/home && cd /cluster/home && \
+    git clone https://github.com/larbys/ubdl && cd /cluster/home/ubdl && \
+    git checkout -b v2_me_06_03 origin/v2_me_06_03 && \
+    git submodule init && git submodule update && \
+    bash -c "alias which='/usr/bin/which' && source setenv_py3_container.sh && source configure.sh && source buildall_py3.sh"
+
+# LANTERN COMPONENT: URESNET (Sparse SSNet)
+RUN cd /cluster/home && \
+    git clone https://github.com/NuTufts/uresnet_pytorch && \
+    cd uresnet_pytorch && git checkout prod_v02 && \
+    mkdir /cluster/home/uresnet_pytorch/weights && \
+    cd /cluster/home/uresnet_pytorch/weights && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1tDjS8T3_CDHuzhCmQpy2XVu7G3UCv0-k' -O Plane0_32_5_weighting.ckpt && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1wYPNbBlvBebwY7ZLDCzPs4bD6765evVb' -O Plane1_32_5_weighting.ckpt && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1sFYaIJDMlGJdWVj6PqVzRVrAi3XMaDOT' -O Plane2_32_5_weighting.ckpt
+
+# LANTERN COMPONENT: ProngCNN
+RUN cd /cluster/home && \
+    git clone https://github.com/mmrosenberg/prongCNN && \
+    cd prongCNN && \
+    git checkout lantern_v01 && \
+    mkdir /cluster/home/prongCNN/models/checkpoints && \
+    cd /cluster/home/prongCNN/models/checkpoints && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1kOPP9MH09Pm0Iw7erYmZjy_LhbPScL-Z' -O LArPID_default_network_weights.pt && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1eq2kxJ__JSUhjbqDtn-1P2nMqyZEheBW' -O LArPID_alternate_network_weights.pt
+
+# LANTERN COMPONENT: gen2ntuple
+RUN cd /cluster/home && \
+    git clone https://github.com/NuTufts/gen2ntuple && \
+    cd gen2ntuple && \
+    git checkout v7 && \
+    cd helpers/ && \
+    bash -c "alias which='/usr/bin/which' && source /cluster/home/ubdl/setenv_py3_container.sh && source /cluster/home/ubdl/configure.sh && source compile_wirecell_fiducial_volume.sh
+
+# LANTERN SCRIPTS
+RUN mkdir -p /cluster/home/lantern_scripts/ && cd /cluster/home/lantern_scripts/ && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=13Q1GHWzfYil2ND7RvFsBt9qs5yutygc8' -O setup_lantern_container.sh && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1m_iFuFGHi38dGuW88d0Mt8PEaCBr9o9f' -O config_larmatchme_deploycpu.yaml
+
+# PERMISSIONS
+RUN chmod -R o+r /cluster/home/uresnet_pytorch/weights && \
+    chmod o+r /cluster/home/ubdl/larflow/larmatchnet/larmatch/larmatch_ckpt78k.pt && \
+    chmod -R o+r /cluster/home/prongCNN/models/checkpoints && \
+    chmod -R o+r lantern_scripts && \
+    chmod o+r /cluster/home/ubdl/larflow/larflow/Reco/data/Proton_Muon_Range_dEdx_LAr_TSplines.root
+    
+    

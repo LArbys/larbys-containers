@@ -1,0 +1,48 @@
+Bootstrap: docker
+From: larbys/ubdl:u20.04_cu11.1_torch1.9_root6.24.02_minkowski_xgboost
+
+%post -c /bin/bash
+        mkdir -p /cluster/home
+        cd /cluster/home
+        git clone https://github.com/larbys/ubdl
+        cd ubdl
+        git checkout v2_me_06_02
+        git submodule init
+        git submodule update
+        mv /cluster/home/ubdl/setup_laropencv_container.sh /cluster/home/ubdl/LArOpenCV/
+        source /cluster/home/ubdl/setenv_py3_container.sh
+        source /cluster/home/ubdl/configure_container.sh
+        source /cluster/home/ubdl/buildall_py3_container.sh
+        cd /cluster/home
+        git clone https://github.com/NuTufts/uresnet_pytorch
+        cd uresnet_pytorch
+        git checkout prod_v02
+        cd /cluster/home
+        git clone https://github.com/NuTufts/gen2ntuple
+        cd gen2ntuple
+        git checkout v7
+        cd helpers/
+        source compile_wirecell_fiducial_volume.sh
+        cd /cluster/home
+        git clone https://github.com/mmrosenberg/prongCNN
+        cd prongCNN
+        git checkout lantern_v01
+        cd /cluster/home
+        mkdir /cluster/home/ubdl/larflow/larflow/Reco/data
+        mkdir /cluster/home/uresnet_pytorch/weights
+        mkdir /cluster/home/prongCNN/models/checkpoints
+        mkdir /cluster/home/lantern_scripts
+	cp /tmp/lantern_container_files/network_weights/Plane0_32_5_weighting_slimmed.ckpt /cluster/home/uresnet_pytorch/weights/Plane0_32_5_weighting.ckpt
+	cp /tmp/lantern_container_files/network_weights/Plane1_32_5_weighting_slimmed.ckpt /cluster/home/uresnet_pytorch/weights/Plane1_32_5_weighting.ckpt
+	cp /tmp/lantern_container_files/network_weights/Plane2_32_5_weighting_slimmed.ckpt /cluster/home/uresnet_pytorch/weights/Plane2_32_5_weighting.ckpt	
+        cp /tmp/lantern_container_files/network_weights/larmatch_ckpt78k_slimmed.pt /cluster/home/ubdl/larflow/larmatchnet/larmatch/larmatch_ckpt78k.pt
+        cp /tmp/lantern_container_files/network_weights/LArPID_default_network_weights_slimmed.pt /cluster/home/prongCNN/models/checkpoints/LArPID_default_network_weights.pt
+        cp /tmp/lantern_container_files/network_weights/LArPID_alternate_network_weights_slimmed.pt /cluster/home/prongCNN/models/checkpoints/LArPID_alternate_network_weights.pt
+        cp /tmp/lantern_container_files/lantern_misc/setup_lantern_container.sh /cluster/home/lantern_scripts/
+        cp /tmp/lantern_container_files/lantern_misc/config_larmatchme_deploycpu.yaml /cluster/home/lantern_scripts/
+        cp /tmp/lantern_container_files/lantern_misc/Proton_Muon_Range_dEdx_LAr_TSplines.root /cluster/home/ubdl/larflow/larflow/Reco/data/
+        chmod -R o+r /cluster/home/uresnet_pytorch/weights
+        chmod o+r /cluster/home/ubdl/larflow/larmatchnet/larmatch/larmatch_ckpt78k.pt
+        chmod -R o+r /cluster/home/prongCNN/models/checkpoints
+        chmod -R o+r lantern_scripts
+        chmod o+r /cluster/home/ubdl/larflow/larflow/Reco/data/Proton_Muon_Range_dEdx_LAr_TSplines.root
