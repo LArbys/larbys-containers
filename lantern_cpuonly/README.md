@@ -56,7 +56,6 @@ This was used to produce the CCnue and CCnumu selections currently described in 
 
 The software stack is as follows:
 
-| -------------- | -------------- | ---------------------- |
 | Receipe File   | docker hub tag | description            |
 | -------------- | -------------- | ---------------------- |
 | Dockerfile_pytorch1.9_ubuntu20.04_py3_ubdldeps | `larbys/lantern:v2_me_06_03_ubdl_deps` | Dependencies installed on top of ubuntu20.04. Includes: pytorch 1.9.0+cpu, MinkowskiEngine, CERN root v6.28.12-gcc9.4, OpenCV 3.4.13 |
