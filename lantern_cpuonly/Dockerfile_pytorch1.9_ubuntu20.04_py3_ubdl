@@ -1,0 +1,62 @@
+FROM larbys/lantern:v2_me_06_03_ubdl_deps
+
+MAINTAINER taritree.wongjirad@tufts.edu
+
+# UBDL
+RUN mkdir -p /cluster/home && cd /cluster/home && \
+    git clone https://github.com/larbys/ubdl && cd /cluster/home/ubdl && \
+    git checkout -b v2_me_06_03 origin/v2_me_06_03 && \
+    git submodule init && git submodule update && \
+    bash -c "alias which='/usr/bin/which' && source setenv_py3_container.sh && source configure_container.sh && source buildall_py3_container.sh"
+
+# LANTERN COMPONENT: URESNET (Sparse SSNet)
+RUN cd /cluster/home && \
+    git clone https://github.com/NuTufts/uresnet_pytorch && \
+    cd uresnet_pytorch && git checkout prod_v02b && \
+    mkdir /cluster/home/uresnet_pytorch/weights && \
+    cd /cluster/home/uresnet_pytorch/weights && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1tDjS8T3_CDHuzhCmQpy2XVu7G3UCv0-k' -O Plane0_32_5_weighting.ckpt && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1wYPNbBlvBebwY7ZLDCzPs4bD6765evVb' -O Plane1_32_5_weighting.ckpt && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1sFYaIJDMlGJdWVj6PqVzRVrAi3XMaDOT' -O Plane2_32_5_weighting.ckpt
+
+# LANTERN COMPONENT: ProngCNN
+RUN cd /cluster/home && \
+    git clone https://github.com/mmrosenberg/prongCNN && \
+    cd prongCNN && \
+    git checkout lantern_v01 && \
+    mkdir /cluster/home/prongCNN/models/checkpoints
+#    cd /cluster/home/prongCNN/models/checkpoints && \
+#    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1kOPP9MH09Pm0Iw7erYmZjy_LhbPScL-Z' -O LArPID_default_network_weights.pt && \
+#    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1eq2kxJ__JSUhjbqDtn-1P2nMqyZEheBW' -O LArPID_alternate_network_weights.pt
+
+# LANTERN COMPONENT: gen2ntuple
+RUN cd /cluster/home && \
+    git clone https://github.com/NuTufts/gen2ntuple && \
+    cd gen2ntuple && \
+    git checkout lantern_prod_v2_me_06_03 && \
+    cd helpers/ && \
+    bash -c "alias which='/usr/bin/which' && source /cluster/home/ubdl/setenv_py3_container.sh && source /cluster/home/ubdl/configure_container.sh && source compile_wirecell_fiducial_volume.sh"
+
+# LANTERN SCRIPTS
+RUN mkdir -p /cluster/home/lantern_scripts/ && cd /cluster/home/lantern_scripts/ && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=13Q1GHWzfYil2ND7RvFsBt9qs5yutygc8' -O setup_lantern_container.sh && \
+    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1m_iFuFGHi38dGuW88d0Mt8PEaCBr9o9f' -O config_larmatchme_deploycpu.yaml
+
+# GET LANTERN WEIGHTS
+#RUN cd /cluster/home/ubdl/larflow/larmatchnet/larmatch/ && \
+#    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1n5D_FtFH-GiOcuaakncTFHzbl8zSAXpT' -O larmatch_ckpt78k_slimmed.pt && \
+#    mv larmatch_ckpt78k_slimmed.pt larmatch_ckpt78k.pt
+COPY larmatch_ckpt78k_slimmed.pt /cluster/home/ubdl/larflow/larmatchnet/larmatch/larmatch_ckpt78k.pt
+
+# GET LArPID Weights
+COPY LArPID_alternate_network_weights_slimmed.pt /cluster/home/prongCNN/models/checkpoints/LArPID_alternate_network_weights.pt
+COPY LArPID_default_network_weights_slimmed.pt /cluster/home/prongCNN/models/checkpoints/LArPID_default_network_weights.pt
+
+# PERMISSIONS
+RUN chmod -R o+r /cluster/home/uresnet_pytorch/weights && \
+    chmod o+r /cluster/home/ubdl/larflow/larmatchnet/larmatch/larmatch_ckpt78k.pt && \
+    chmod -R o+r /cluster/home/prongCNN/models/checkpoints && \
+    chmod -R o+r /cluster/home/lantern_scripts && \
+    chmod o+r /cluster/home/ubdl/larflow/larflow/Reco/data/Proton_Muon_Range_dEdx_LAr_TSplines.root
+    
+    

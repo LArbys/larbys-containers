@@ -57,7 +57,6 @@ RUN cd /tmp && \
 # PyTorch 1.9.0 CPU
 RUN apt-get update -y && apt install -y python3-pip && \
     pip install torch==1.9.1+cpu torchvision==0.10.1+cpu torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html \
-    pip install torch==1.11.0+cpu torchvision==0.12.0+cpu torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cpu \
     && rm -rf ~/.cache/pip /root/.cache/pip \
     && apt-get clean -y
 
@@ -72,16 +71,22 @@ RUN pip3 install -U git+https://github.com/NVIDIA/MinkowskiEngine -v --no-deps \
                            --install-option="--cpu_only" \
                            --install-option="--blas=openblas"
 
-# ROOT DEPENDENCIES
+# ROOT DEPENDENCIES: REQUIRED
 RUN apt update -y && \
     apt install -y binutils cmake dpkg-dev g++ gcc libssl-dev git libx11-dev \
     libxext-dev libxft-dev libxpm-dev python3 libtbb-dev libgif-dev wget && \
     apt-get autoremove -y && apt-get clean -y
+RUN apt update -y && \
+    apt install -y gfortran libpcre3-dev libfftw3-dev libcfitsio-dev libgraphviz-dev \
+    libavahi-compat-libdnssd-dev libldap2-dev python3-dev libxml2-dev libkrb5-dev libboost1.71-all-dev \
+    libgsl-dev libgl2ps-dev liblzma-dev libxxhash-dev liblz4-dev libzstd-dev && \
+    apt-get autoremove -y && apt-get clean -y
+    
 
 # INSTALL ROOT PRE-COMPILED BINARIES
-RUN cd /usr/local/ && wget https://root.cern/download/root_v6.34.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
-    && tar -xzvf root_v6.34.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
-    && rm root_v6.34.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz
+RUN cd /usr/local/ && wget https://root.cern/download/root_v6.28.12.Linux-ubuntu20-x86_64-gcc9.4.tar.gz \
+    && tar -xzvf root_v6.28.12.Linux-ubuntu20-x86_64-gcc9.4.tar.gz \
+    && rm root_v6.28.12.Linux-ubuntu20-x86_64-gcc9.4.tar.gz
 
 # OPENCV DEPENDENCEIS
 RUN apt-get update -y && \
@@ -111,11 +116,11 @@ RUN pip install pyyaml scipy \
     && rm -rf ~/.cache/pip /root/.cache/pip
 
 # UBDL
-RUN mkdir -p /cluster/home && cd /cluster/home && \
-    git clone https://github.com/larbys/ubdl && cd /cluster/home/ubdl && \
-    git checkout -b v2_me_06_03 origin/v2_me_06_03 && \
-    git submodule init && git submodule update && \
-    bash -c "alias which='/usr/bin/which' && source setenv_py3_container.sh && source configure.sh && source buildall_py3.sh"
+#RUN mkdir -p /cluster/home && cd /cluster/home && \
+#    git clone https://github.com/larbys/ubdl && cd /cluster/home/ubdl && \
+#    git checkout -b v2_me_06_03 origin/v2_me_06_03 && \
+#    git submodule init && git submodule update && \
+#    bash -c "alias which='/usr/bin/which' && source setenv_py3_container.sh && source configure.sh && source buildall_py3.sh"
 
 # LANTERN COMPONENT: URESNET (Sparse SSNet)
 #RUN cd /cluster/home && \
