@@ -5,14 +5,14 @@ MAINTAINER taritree.wongjirad@tufts.edu
 # UBDL
 RUN mkdir -p /cluster/home && cd /cluster/home && \
     git clone https://github.com/larbys/ubdl && cd /cluster/home/ubdl && \
-    git checkout -b v2_me_06_03 origin/v2_me_06_03 && \
+    git checkout v2_me_06_03_prod_01 && \
     git submodule init && git submodule update && \
     bash -c "alias which='/usr/bin/which' && source setenv_py3_container.sh && source configure_container.sh && source buildall_py3_container.sh"
 
 # LANTERN COMPONENT: URESNET (Sparse SSNet)
 RUN cd /cluster/home && \
     git clone https://github.com/NuTufts/uresnet_pytorch && \
-    cd uresnet_pytorch && git checkout prod_v02b && \
+    cd uresnet_pytorch && git checkout prod_v03 && \
     mkdir /cluster/home/uresnet_pytorch/weights && \
     cd /cluster/home/uresnet_pytorch/weights && \
     wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1tDjS8T3_CDHuzhCmQpy2XVu7G3UCv0-k' -O Plane0_32_5_weighting.ckpt && \
@@ -21,7 +21,7 @@ RUN cd /cluster/home && \
 
 # LANTERN COMPONENT: ProngCNN
 RUN cd /cluster/home && \
-    git clone https://github.com/mmrosenberg/prongCNN && \
+    git clone https://github.com/NuTufts/prongCNN && \
     cd prongCNN && \
     git checkout lantern_v01 && \
     mkdir /cluster/home/prongCNN/models/checkpoints
@@ -33,14 +33,19 @@ RUN cd /cluster/home && \
 RUN cd /cluster/home && \
     git clone https://github.com/NuTufts/gen2ntuple && \
     cd gen2ntuple && \
-    git checkout lantern_prod_v2_me_06_03 && \
+    git checkout v2_me_06_03_prod_01 && \
     cd helpers/ && \
     bash -c "alias which='/usr/bin/which' && source /cluster/home/ubdl/setenv_py3_container.sh && source /cluster/home/ubdl/configure_container.sh && source compile_wirecell_fiducial_volume.sh"
 
 # LANTERN SCRIPTS
 RUN mkdir -p /cluster/home/lantern_scripts/ && cd /cluster/home/lantern_scripts/ && \
-    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=13Q1GHWzfYil2ND7RvFsBt9qs5yutygc8' -O setup_lantern_container.sh && \
-    wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1m_iFuFGHi38dGuW88d0Mt8PEaCBr9o9f' -O config_larmatchme_deploycpu.yaml
+    cp /cluster/home/ubdl/fnal_prod/run_lantern_workflow_data.sh ./ && \
+    cp /cluster/home/ubdl/fnal_prod/run_lantern_workflow_mc.sh ./ && \
+    cp /cluster/home/ubdl/fnal_prod/run_lantern_workflow_mc_altLArPIDWeights.sh ./ && \
+    cp /cluster/home/ubdl/fnal_prod/setup_lantern_container.sh ./ && \
+    cp /cluster/home/ubdl/fnal_prod/config_larmatchme_deploycpu.yaml ./
+    #wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=13Q1GHWzfYil2ND7RvFsBt9qs5yutygc8' -O setup_lantern_container.sh && \
+    #wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1m_iFuFGHi38dGuW88d0Mt8PEaCBr9o9f' -O config_larmatchme_deploycpu.yaml
 
 # GET LANTERN WEIGHTS
 #RUN cd /cluster/home/ubdl/larflow/larmatchnet/larmatch/ && \
