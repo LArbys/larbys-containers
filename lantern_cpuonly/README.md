@@ -81,3 +81,29 @@ Link to [lantern google drive folder](https://drive.google.com/drive/folders/1_R
     docker build -t ubdl:v2_me_06_03 . -f Dockerfile_pytorch1.9_ubuntu20.04_py3_ubdl
     ```
 4) build a singularity image as described above, using your image name and tag
+
+## Container Version Control in uboone MCC10 Releases
+
+From the [MCC10 uboone wiki](https://cdcvs.fnal.gov/redmine/projects/uboone-physics-analysis/wiki/MCC10_Release_Page):
+
+```
+The LANTERN container version used in an MCC10 release is given by the "lantern_container" dependency of uboonecode.
+The scripts in MCC10 workflows will launch the LANTERN reconstruction using the container at /cvmfs/uboone.opensciencegrid.org/containers/lantern_<container_version>
+
+For every new container release, a tag is made for the larbys-containers repo described above under "container documentation" with the exact same name that was used for the container version in uboonecode.
+One can therefore determine the version of all LANTERN repositories and dependencies used in a given MCC10 release by:
+
+1. Find the lantern container version from the "lantern_container" dependency of uboonecode
+2. Clone or go to https://github.com/LArbys/larbys-containers, select the tag that matches the LANTERN container version from the release, and inspect the LANTERN repo tags and software versions specified in the Docker files described above under "container documentation"
+```
+
+To maintain proper version control, the following procedure should therefore be used when updating the LANTERN container for a uboonecode release:
+
+1) Make your changes to whichever specific LANTERN repo (e.g. ubdl) needs to be updated, and make a new github tag for that repo.
+2) In the production branch of this larbys-containers repo, update Dockerfile_pytorch1.9_ubuntu20.04_py3_ubdl to pull in the new tag for the modified repo made in step 1
+3) Tag the production branch of this larbys-containers repo. The name of this tag will define the "LANTERN container version"
+4) Rebuild the LANTERN container with the new docker file, and install it on cvmfs at `/cvmfs/uboone.opensciencegrid.org/containers/lantern_<container_version>`, where the name of the tag created in step 3 is used for "container_version"
+5) Update the lantern_container dependency of uboonecode for a new MCC10 release to the name of the tag created in step 3
+6) Document the updated github tags for the new container in the "container releases" section of the "MCC 10 LANTERN Container" documentation in the [MCC10 release wiki](https://cdcvs.fnal.gov/redmine/projects/uboone-physics-analysis/wiki/MCC10_Release_Page)
+
+
